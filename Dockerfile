@@ -2,6 +2,7 @@ FROM debian:latest
 ADD j805_amd64.deb /root/j805_amd64.deb
 RUN mkdir /usr/share/applications \
  && mkdir -p /usr/share/icons/hicolor/scalable/apps \
+ && mkdir /data \
  && dpkg -i /root/j805_amd64.deb \
  && apt-get update \
  && apt-get install -y \
@@ -10,8 +11,10 @@ RUN mkdir /usr/share/applications \
     libqt5websockets5 \
     qt5-default \
     wget \
-    xvfb
-RUN echo "install'all'\nexit''" > /tmp/install.ijs \
+    xvfb \
+ && echo "install'all'\nexit''" > /tmp/install.ijs \
  && ijconsole /tmp/install.ijs \
  && rm /tmp/install.ijs
-ENTRYPOINT ijconsole
+VOLUME /data
+WORKDIR /data
+ENTRYPOINT ["ijconsole"]
