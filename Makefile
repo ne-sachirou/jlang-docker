@@ -1,14 +1,18 @@
-.PHONY: help build run sh
 default: help
-help:
-	@grep -E '^[a-zA-Z_-]+:.*?## .' $(MAKEFILE_LIST) | sort | awk -F ':.*?## ' '{printf "%s\t\t\t%s\n",$$1,$$2}'
 
+.PHONY: help
+help:
+	@awk -F':.*##' '/^[-_a-zA-Z0-9]+:.*##/{printf"%-12s\t%s\n",$$1,$$2}' $(MAKEFILE_LIST) | sort
+
+.PHONY: build
 build: ## Build
-	ls j805_amd64.deb || wget http://www.jsoftware.com/download/j805/install/j805_amd64.deb
+	ls j807_amd64.deb || wget http://www.jsoftware.com/download/j807/install/j807_amd64.deb
 	docker build -t nesachirou/jlang .
 
+.PHONY: run
 run: ## Run jconsole
 	docker run -it -v $(shell pwd):/data nesachirou/jlang ${ARGS}
 
+.PHONY: sh
 sh:
 	docker exec -it $(shell docker ps -q -f'ancestor=nesachirou/jlang') bash
