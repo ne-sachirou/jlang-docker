@@ -12,7 +12,6 @@ RUN set -ex \
  && apt-get update \
  && apt-get install -y --no-install-recommends \
     gtk-update-icon-cache \
-    libedit2 \
  && dpkg -i j${J_VERSION}_amd64.deb \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
