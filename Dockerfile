@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM debian:buster-slim
 
 VOLUME /data
 WORKDIR /data
