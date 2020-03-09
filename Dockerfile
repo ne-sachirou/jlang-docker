@@ -15,6 +15,7 @@ RUN set -ex \
  && dpkg -i j${J_VERSION}_amd64.deb \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
+ && mkdir -p /root/j901-user/temp \
  && printf "install'all'\\nexit''" > install.ijs \
  && ijconsole install.ijs \
  && rm install.ijs

@@ -1,5 +1,3 @@
-default: help
-
 .PHONY: help
 help:
 	@awk -F':.*##' '/^[-_a-zA-Z0-9]+:.*##/{printf"%-12s\t%s\n",$$1,$$2}' $(MAKEFILE_LIST) | sort
@@ -9,7 +7,7 @@ J_VERSION=901
 .PHONY: build
 build: ## Build
 	ls "j$(J_VERSION)_amd64.deb" || wget "http://www.jsoftware.com/download/j$(J_VERSION)/install/j$(J_VERSION)_amd64.deb"
-	docker build --pull --force-rm -t "nesachirou/jlang:$(J_VERSION)" --build-arg "J_VERSION=$(J_VERSION)" .
+	DOCKER_BUILDKIT=1 docker build --pull --force-rm -t "nesachirou/jlang:$(J_VERSION)" --build-arg "J_VERSION=$(J_VERSION)" .
 	docker tag "nesachirou/jlang:$(J_VERSION)" nesachirou/jlang:latest
 
 .PHONY: publish
