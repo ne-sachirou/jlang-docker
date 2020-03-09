@@ -1,0 +1,40 @@
+---
+name: test
+
+'on': [pull_request, push]
+
+env:
+  DOCKER_BUILDKIT: '1'
+  J_VERSION: 901
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends yamllint
+          yamllint .yamllint ./.*.yaml ./*.yml .github/workflows/*.yml
+          docker run --rm \
+            -v $(pwd):/mnt \
+            hadolint/hadolint:latest \
+            hadolint --config /mnt/.hadolint.yaml /mnt/Dockerfile
+      - name: Build
+        run: |
+          docker push nesachirou/jlang:latest || true
+          docker build --pull --force-rm \
+            -t "nesachirou/jlang:$J_VERSION" \
+            -t nesachirou/jlang:latest \
+            --build-arg BUILDKIT_INLINE_CACHE=1 \
+            --build-arg "J_VERSION=$J_VERSION" \
+            --cache-from nesachirou/jlang:latest \
+            .
+          curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64
+          chmod +x container-structure-test-linux-amd64
+          sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+
+          container-structure-test test \
+            --image "nesachirou/jlang:$J_VERSION" \
+            --config container-structure-test.yml

@@ -1,0 +1,38 @@
+---
+name: build
+
+'on':
+  push:
+    branches: [master]
+
+env:
+  DOCKER_BUILDKIT: '1'
+  J_VERSION: 901
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: |
+          docker push nesachirou/jlang:latest || true
+          docker build --pull --force-rm \
+            -t "nesachirou/jlang:$J_VERSION" \
+            -t nesachirou/jlang:latest \
+            --build-arg BUILDKIT_INLINE_CACHE=1 \
+            --build-arg "J_VERSION=$J_VERSION" \
+            --cache-from nesachirou/jlang:latest \
+            .
+          curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64
+          chmod +x container-structure-test-linux-amd64
+          sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+
+          container-structure-test test \
+            --image "nesachirou/jlang:$J_VERSION" \
+            --config container-structure-test.yml
+      - name: Publish
+        run: |
+          docker login -u nesachirou -p "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}"
+          docker push "nesachirou/jlang:$J_VERSION"
+          docker push nesachirou/jlang:latest
