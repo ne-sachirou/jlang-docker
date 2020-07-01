@@ -12,7 +12,7 @@ RUN mkdir -p /usr/share/applications /usr/share/icons/hicolor/scalable/apps "/ro
  && apt-get install -y --no-install-recommends \
     curl \
     gtk-update-icon-cache \
- && curl -LO "http://www.jsoftware.com/download/j901/install/j${J_VERSION}_amd64.deb" \
+ && curl -LO "http://www.jsoftware.com/download/j${J_VERSION}/install/j${J_VERSION}_amd64.deb" \
  && dpkg -i "j${J_VERSION}_amd64.deb" \
  && apt-get purge -y curl \
  && apt-get autoremove -y \

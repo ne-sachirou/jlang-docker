@@ -18,12 +18,12 @@ jobs:
           sudo apt-get install -y --no-install-recommends yamllint
           yamllint .yamllint ./.*.yaml ./*.yml .github/workflows/*.yml
           docker run --rm \
-            -v $(pwd):/mnt \
+            -v "$(pwd):/mnt" \
             hadolint/hadolint:latest \
             hadolint --config /mnt/.hadolint.yaml /mnt/Dockerfile
       - name: Build
         run: |
-          docker push nesachirou/jlang:latest || true
+          docker pull nesachirou/jlang:latest || true
           docker build --pull --force-rm \
             -t "nesachirou/jlang:$J_VERSION" \
             -t nesachirou/jlang:latest \

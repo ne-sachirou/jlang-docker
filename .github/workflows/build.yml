@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build
         run: |
-          docker push nesachirou/jlang:latest || true
+          docker pull nesachirou/jlang:latest || true
           docker build --pull --force-rm \
             -t "nesachirou/jlang:$J_VERSION" \
             -t nesachirou/jlang:latest \
