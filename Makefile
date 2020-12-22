@@ -20,6 +20,7 @@ test: ## Test
 	hadolint Dockerfile
 	ls .github/workflows/*.yml | xargs -t ./lint-github-actions.rb
 	container-structure-test test --image "nesachirou/jlang:$(J_VERSION)" --config container-structure-test.yml
+	docker scan "nesachirou/jlang:$(J_VERSION)" || true
 
 .PHONY: run
 run: ## Run ijconsole
