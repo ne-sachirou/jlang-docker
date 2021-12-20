@@ -27,5 +27,5 @@ docker run -it -v $(pwd):/data --rm nesachirou/jlang sample.ijs
 In my `.zshrc` :
 
 ```sh
-alias j='docker run -it --rm nesachirou/jlang'
+alias j='docker run -it -v "$(pwd):/mnt" --rm nesachirou/jlang'
 ```
