@@ -5,7 +5,7 @@ name: test
 
 env:
   DOCKER_BUILDKIT: '1'
-  J_VERSION: 901
+  J_VERSION: 903
 
 jobs:
   test:
