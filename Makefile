@@ -2,7 +2,7 @@
 help:
 	@awk -F':.*##' '/^[-_a-zA-Z0-9]+:.*##/{printf"%-12s\t%s\n",$$1,$$2}' $(MAKEFILE_LIST) | sort
 
-J_VERSION=902
+J_VERSION=903
 
 .PHONY: build
 build: ## Build
@@ -16,9 +16,9 @@ publish: ## Publish images to Docker Hub
 .PHONY: test
 test: ## Test
 	shellcheck Makefile || true
-	yamllint .yamllint ./.*.yaml ./*.yml
+	yamllint .yamllint ./.*.yaml ./*.yml .github/workflows/*.yml
 	hadolint Dockerfile
-	ls .github/workflows/*.yml | xargs -t ./lint-github-actions.rb
+	find .github/workflows -name '*.yml' -exec ./lint-github-actions.rb {} \;
 	container-structure-test test --image "nesachirou/jlang:$(J_VERSION)" --config container-structure-test.yml
 	docker scan "nesachirou/jlang:$(J_VERSION)" || true
 
