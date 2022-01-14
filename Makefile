@@ -8,6 +8,10 @@ J_VERSION=903
 build: ## Build
 	DOCKER_BUILDKIT=1 docker build --pull --force-rm -t "nesachirou/jlang:$(J_VERSION)" -t nesachirou/jlang:latest --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg "J_VERSION=$(J_VERSION)" .
 
+.PHONY: format
+format: ## Format
+	npx prettier --parser yaml --write .yamllint ./.*.yaml ./*.yml .github/workflows/*.yml
+
 .PHONY: publish
 publish: ## Publish images to Docker Hub
 	docker push "nesachirou/jlang:$(J_VERSION)"
@@ -15,10 +19,8 @@ publish: ## Publish images to Docker Hub
 
 .PHONY: test
 test: ## Test
-	shellcheck Makefile || true
 	yamllint .yamllint ./.*.yaml ./*.yml .github/workflows/*.yml
-	hadolint Dockerfile
-	find .github/workflows -name '*.yml' -exec ./lint-github-actions.rb {} \;
+	if which hadolint ; then hadolint Dockerfile ; fi
 	container-structure-test test --image "nesachirou/jlang:$(J_VERSION)" --config container-structure-test.yml
 	docker scan "nesachirou/jlang:$(J_VERSION)" || true
 
