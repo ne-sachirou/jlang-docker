@@ -11,7 +11,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup container-structured-test
         run: |
           curl -fsLO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64
@@ -19,7 +19,7 @@ jobs:
           sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
       - name: Setup yamllint
         run: sudo apt-get install -y --no-install-recommends yamllint
-      - uses: hadolint/hadolint-action@v1.6.0
+      - uses: hadolint/hadolint-action@v2.1.0
         with:
           dockerfile: Dockerfile
       - name: Build
